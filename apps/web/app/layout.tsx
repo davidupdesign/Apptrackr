@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Epilogue, Outfit, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./store/StoreProvider";
-import { cn } from "@repo/types/lib/utils";
 
 // display - heading, title, logo
 const epilogue = Epilogue({

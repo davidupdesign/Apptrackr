@@ -5,10 +5,10 @@
 /* ============================================
    FONTS
    ============================================ */
-   @theme {
-    --font-display: 'Epilogue', sans-serif;
-    --font-body: 'Outfit', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+   @theme inline {
+    --font-display: var(--font-display);
+    --font-body: var(--font-body);
+    --font-mono: var(--font-mono);
   }
 
 /* ============================================
