@@ -28,6 +28,19 @@
     --color-status-interview: #f59e0b;
     --color-status-offer: #22c55e;
     --color-status-rejected: #ef4444;
+
+  /* Spacing / Sizing tokens */
+  --spacing-card-pad: 48px;
+  --spacing-section-gap: 32px;
+  --spacing-field-gap: 20px;
+  --spacing-label-gap: 8px;
+  --spacing-input-pad-x: 14px;
+  --spacing-input-pad-y: 12px;
+
+  /* Input / Button sizing */
+  --radius-card: 0.75rem;   /* rounded-xl */
+  --radius-input: 0.125rem; /* rounded-sm  */
+  --radius-button: 0.125rem;
   }
 
 /* ============================================
