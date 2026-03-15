@@ -143,7 +143,7 @@ export default function LoginPage() {
   
             <p className="text-sm text-text-muted" style={{ marginTop: '24px' }}>
               Don&apos;t have an account?{" "}
-              <a href="/register" className="text-accent font-semibold hover:underline">
+              <a href="/signup" className="text-accent font-semibold hover:underline">
                 Sign Up
               </a>
             </p>
