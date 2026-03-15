@@ -3,45 +3,32 @@
 @import "shadcn/tailwind.css";
 
 /* ============================================
-   FONTS
+   FONTS — maps next/font CSS vars to Tailwind utilities
    ============================================ */
-   @theme inline {
-    --font-display: var(--font-display);
-    --font-body: var(--font-body);
-    --font-mono: var(--font-mono);
-  }
+@theme inline {
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+}
 
 /* ============================================
-   LIGHT MODE (default)
+   DESIGN TOKENS — light mode defaults
    ============================================ */
-   @theme {
-    --color-bg: #efe6de;
-    --color-surface: #ffffff;
-    --color-border: #e0d5cb;
-    --color-text-primary: #1a1a1a;
-    --color-text-muted: #55666e;
-    --color-accent: #9a0002;
-    --color-accent-hover: #6c0102;
-  
-    --color-status-saved: #3b82f6;
-    --color-status-applied: #a855f7;
-    --color-status-interview: #f59e0b;
-    --color-status-offer: #22c55e;
-    --color-status-rejected: #ef4444;
+@theme {
+  --color-bg: #efe6de;
+  --color-surface: #ffffff;
+  --color-border: #e0d5cb;
+  --color-text-primary: #1a1a1a;
+  --color-text-muted: #55666e;
+  --color-accent: #9a0002;
+  --color-accent-hover: #6c0102;
 
-  /* Spacing / Sizing tokens */
-  --spacing-card-pad: 48px;
-  --spacing-section-gap: 32px;
-  --spacing-field-gap: 20px;
-  --spacing-label-gap: 8px;
-  --spacing-input-pad-x: 14px;
-  --spacing-input-pad-y: 12px;
-
-  /* Input / Button sizing */
-  --radius-card: 0.75rem;   /* rounded-xl */
-  --radius-input: 0.125rem; /* rounded-sm  */
-  --radius-button: 0.125rem;
-  }
+  --color-status-saved: #3b82f6;
+  --color-status-applied: #a855f7;
+  --color-status-interview: #f59e0b;
+  --color-status-offer: #22c55e;
+  --color-status-rejected: #ef4444;
+}
 
 /* ============================================
    DARK MODE
@@ -63,8 +50,7 @@
   box-sizing: border-box;
 }
 
-html,
-body {
+html, body {
   max-width: 100vw;
   overflow-x: hidden;
   font-family: var(--font-body), sans-serif;
@@ -73,27 +59,9 @@ body {
 body {
   background-color: var(--color-bg);
   color: var(--color-text-primary);
-  transition:
-    background-color 150ms ease,
-    color 150ms ease;
+  transition: background-color 150ms ease, color 150ms ease;
 }
 
 a {
-  color: inherit;
   text-decoration: none;
-}
-
-/* ============================================
-   TYPOGRAPHY UTILITIES
-   ============================================ */
-.font-display {
-  font-family: var(--font-display), sans-serif;
-}
-
-.font-body {
-  font-family: var(--font-body), sans-serif;
-}
-
-.font-mono {
-  font-family: var(--font-mono), monospace;
 }
