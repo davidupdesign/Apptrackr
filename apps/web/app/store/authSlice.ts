@@ -30,6 +30,8 @@ const authSlice = createSlice({
       state.token = action.payload;
       state.isAuthenticated = true;
       localStorage.setItem("token", action.payload);
+      // also set a cookie so middlewate can read it on server
+      document.cookie = `token=${action.payload}; path=/; max-age=${60 * 60 * 24 * 7} `;
     },
 
     // calling aftet GET /auth/me - storing the user data
@@ -43,6 +45,8 @@ const authSlice = createSlice({
       state.token = null;
       state.isAuthenticated = false;
       localStorage.removeItem("token");
+      // clears the cookie
+      document.cookie = "token=; path=/; max-age=0";
     },
   },
 });
