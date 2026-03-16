@@ -19,6 +19,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 
 const statusOptions = [
   "SAVED",
@@ -89,7 +90,7 @@ export default function ApplicationDetailPage() {
     }
   }, [id, existing]);
 
-  // sAVE HANDLER
+  // SAVE HANDLER
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -109,9 +110,11 @@ export default function ApplicationDetailPage() {
       const { data } = await api.patch(`/applications/${id}`, payload);
       // updateApplication finds the item by id in redux and replaces witht the updated version from server. no need for full refetch.
       dispatch(updateApplication(data));
+      toast.success("Application updated successfully");
       router.push("/applications");
     } catch {
       setError("Failed to save changes");
+      toast.error("Failed to save changes");
     } finally {
       setLoading(false);
     }
@@ -132,6 +135,7 @@ export default function ApplicationDetailPage() {
 
       //removeApplication filtert the item from the redux list
       dispatch(removeApplication(id));
+      toast.success("Application deleted successfully");
       router.push("/applications");
     } catch {
       setError("Failed to delete application");

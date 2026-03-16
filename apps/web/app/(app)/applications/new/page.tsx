@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { toast } from "sonner";
 
 const statusOptions = [
   "SAVED",
@@ -56,8 +57,10 @@ export default function NewApplicationPage() {
 
       const { data } = await api.post("/applications", payload);
       dispatch(addApplication(data));
+      toast.success("Application added successfully");
       router.push("/applications");
     } catch {
+      toast.error("Failed to add an application");
       setError("Failed to add an application");
     } finally {
       setLoading(false);
