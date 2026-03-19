@@ -36,10 +36,15 @@ export class ApplicationsService {
       notes?: string;
       salary?: number;
       url?: string;
+      appliedAt: string;
     },
   ) {
     return this.prisma.application.create({
-      data: { userId, ...data },
+      data: {
+        userId,
+        ...data,
+        appliedAt: data.appliedAt ? new Date(data.appliedAt) : undefined,
+      },
     });
   }
 
@@ -54,6 +59,7 @@ export class ApplicationsService {
       notes?: string;
       salary?: number;
       url?: string;
+      appliedAt?: string;
     },
   ) {
     // first verify it exists and belongs to the user

@@ -32,6 +32,9 @@ export default function NewApplicationPage() {
   const [status, setStatus] = useState<Status>("APPLIED"); // sensible default
   const [url, setUrl] = useState("");
   const [salary, setSalary] = useState("");
+  const [appliedAt, setAppliedAt] = useState(
+    new Date().toISOString().split("T")[0], // defaults to today in YYYY-MM-DD format
+  );
   const [notes, setNotes] = useState("");
 
   // loading/errorstate
@@ -49,6 +52,7 @@ export default function NewApplicationPage() {
         company,
         role,
         status,
+        appliedAt,
         // only includes optional fields if they have values
         ...(url && { url }),
         ...(salary && { salary: parseInt(salary) }),
@@ -100,7 +104,7 @@ export default function NewApplicationPage() {
               className={inputClass}
               value={company}
               onChange={(e) => setCompany(e.target.value)}
-              placeholder="ex. Google"
+              placeholder="ex. Apptrackr"
               required
             />
           </div>
@@ -115,7 +119,7 @@ export default function NewApplicationPage() {
               value={role}
               onChange={(e) => setRole(e.target.value)}
               className={inputClass}
-              placeholder="ex. Frontend Engineer"
+              placeholder="ex. Software Engineer"
               required
             />
           </div>
@@ -151,7 +155,7 @@ export default function NewApplicationPage() {
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="ex. https://google.com"
+              placeholder="ex. https://newjob.com/"
               className={inputClass}
             />
           </div>
@@ -166,9 +170,24 @@ export default function NewApplicationPage() {
             </label>
             <input
               type="number"
+              step={100}
+              min={0}
               value={salary}
               onChange={(e) => setSalary(e.target.value)}
               placeholder="ex. 95000"
+              className={inputClass}
+            />
+          </div>
+
+          {/* applied at */}
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-semibold text-text-muted uppercase tracking-widest">
+              Date applied
+            </label>
+            <input
+              type="date"
+              value={appliedAt}
+              onChange={(e) => setAppliedAt(e.target.value)}
               className={inputClass}
             />
           </div>

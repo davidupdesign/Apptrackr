@@ -44,6 +44,7 @@ export class ApplicationsController {
       notes?: string;
       salary?: number;
       url?: string;
+      appliedAt: string;
     },
     @Request() req: AuthRequest,
   ) {
@@ -61,6 +62,7 @@ export class ApplicationsController {
       notes?: string;
       salary?: number;
       url?: string;
+      appliedAt?: string;
     },
     @Request() req: AuthRequest,
   ) {
@@ -71,4 +73,5 @@ export class ApplicationsController {
   remove(@Param('id') id: string, @Request() req: AuthRequest) {
     return this.applicationsService.remove(id, req.user.userId);
   }
+
 }

@@ -52,6 +52,7 @@ export default function ApplicationDetailPage() {
   const [status, setStatus] = useState<Status>("APPLIED");
   const [url, setUrl] = useState("");
   const [salary, setSalary] = useState("");
+  const [appliedAt, setAppliedAt] = useState("");
   const [notes, setNotes] = useState("");
 
   // ui state
@@ -69,6 +70,9 @@ export default function ApplicationDetailPage() {
       setStatus(existing.status as Status);
       setUrl(existing.url ?? "");
       setSalary(existing.salary?.toString() ?? "");
+      setAppliedAt(
+        String(existing.appliedAt ?? new Date().toISOString()).split("T")[0] ?? ""
+      );
       setNotes(existing.notes ?? "");
     } else {
       // 2 - not in redux - fetching from api
@@ -80,6 +84,10 @@ export default function ApplicationDetailPage() {
           setStatus(data.status as Status);
           setUrl(data.url ?? "");
           setSalary(data.salary?.toString() ?? "");
+          setAppliedAt(
+            data.appliedAt?.split("T")[0] ??
+              new Date().toISOString().split("T")[0],
+          );
           setNotes(data.notes ?? "");
         } catch {
           // 404  - not found stae
@@ -101,6 +109,7 @@ export default function ApplicationDetailPage() {
         company,
         role,
         status,
+        appliedAt,
         // only includes optional fields if they have values
         ...(url ? { url } : { url: null }),
         ...(salary ? { salary: parseInt(salary) } : { salary: null }),
@@ -261,6 +270,19 @@ export default function ApplicationDetailPage() {
               value={salary}
               onChange={(e) => setSalary(e.target.value)}
               placeholder="95000"
+              className={inputClass}
+            />
+          </div>
+
+          {/* applied at */}
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-semibold uppercase tracking-widest text-text-muted">
+              Date applied
+            </label>
+            <input
+              type="date"
+              value={appliedAt}
+              onChange={(e) => setAppliedAt(e.target.value)}
               className={inputClass}
             />
           </div>
