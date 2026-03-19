@@ -82,88 +82,104 @@ export default function DashboardPage() {
   }
 
   return (
-    <div>
-      {/* page header */}
-      <div className="mb-8">
-        <h1 className="font-display text-2xl font-black text-text-primary">
-          Dashboard
-        </h1>
-        <p className="text-sm text-text-muted mt-1">
-          Your job search at a glance
-        </p>
-      </div>
+    <div className="grid grid-cols-3 gap-6">
+      <div className="col-span-2">
+        {/* page header */}
+        <div className="mb-8 p-5">
+          <h1 className="font-display text-2xl font-black text-text-primary">
+            Dashboard
+          </h1>
+          <p className="text-sm text-text-muted mt-1">
+            Your job search at a glance
+          </p>
+        </div>
 
-      {/* stat cards */}
-      <div className="grid grid-cols-5 gap-4 mb-10">
-        {Object.entries(statusConfig).map(([status, config]) => (
-          <div
-            key={status}
-            className="bg-surface border border-border rounded p-5 flex flex-col gap-2"
-          >
-            <span
-              className={`text-xs font-semibold uppercase tracking-widest ${config.color}`}
+        {/* stat cards */}
+        <div className="grid grid-cols-5 gap-4 mb-10">
+          {Object.entries(statusConfig).map(([status, config]) => (
+            <div
+              key={status}
+              className="bg-surface border border-border rounded p-5 flex flex-col gap-2"
             >
-              {config.label}
-            </span>
-            <span className="font-display text-3xl font-black text-text-primary">
-              {counts[status as keyof typeof counts]}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* recent applications */}
-      <div>
-        <h2 className="font-display text-base font-black text-text-primary mb-4">
-          Recent Applications
-        </h2>
-
-        {recent.length === 0 ? (
-          <div className="bg-surface border border-border rounded p-8 text-center">
-            <p className="text-sm text-text-muted">No applications yet.</p>
-            <a
-              href="/applications/new"
-              className="text-sm text-accent font-semibold hover:underline mt-2 inline-block"
-            >
-              Add your first one
-            </a>
-          </div>
-        ) : (
-          <div>
-            {recent.map((app, index) => (
-              <div
-                key={app.id}
-                className={`flex items-center justify-between px-6 py-4 ${index !== recent.length - 1 ? "border-b border-border" : ""}`}
+              <span
+                className={`text-xs font-semibold uppercase tracking-widest ${config.color}`}
               >
-                <div>
-                  <p className="text-sm font-semibold text-text-primary">
-                    {app.company}
-                  </p>
-                  <p className="text-xs text-text-muted mt-0.5">{app.role}</p>
-                </div>
+                {config.label}
+              </span>
+              <span className="font-display text-3xl font-black text-text-primary">
+                {counts[status as keyof typeof counts]}
+              </span>
+            </div>
+          ))}
+        </div>
 
-                <div className="flex items-center gap-4">
-                  {/* status badge */}
-                  <span
-                    className={`text-xs font-semibold uppercase tracking-widest px-2.5 py-1 rounded-sm ${
-                      statusConfig[app.status].color
-                    } ${statusConfig[app.status].bg}`}
-                  >
-                    {statusConfig[app.status].label}
-                  </span>
+        {/* recent applications */}
+        <div>
+          <h2 className="font-display text-base font-black text-text-primary mb-4">
+            Recent Applications
+          </h2>
 
-                  {/* date */}
-                  <span className="font-mono textxs text-text-muted">
-                    {new Date(app.appliedAt).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </span>
+          {recent.length === 0 ? (
+            <div className="bg-surface border border-border rounded p-8 text-center">
+              <p className="text-sm text-text-muted">No applications yet.</p>
+              <a
+                href="/applications/new"
+                className="text-sm text-accent font-semibold hover:underline mt-2 inline-block"
+              >
+                Add your first one
+              </a>
+            </div>
+          ) : (
+            <div>
+              {recent.map((app, index) => (
+                <div
+                  key={app.id}
+                  className={`flex items-center justify-between px-6 py-4 ${index !== recent.length - 1 ? "border-b border-border" : ""}`}
+                >
+                  <div>
+                    <p className="text-sm font-semibold text-text-primary">
+                      {app.company}
+                    </p>
+                    <p className="text-xs text-text-muted mt-0.5">{app.role}</p>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    {/* status badge */}
+                    <span
+                      className={`text-xs font-semibold uppercase tracking-widest px-2.5 py-1 rounded-sm ${
+                        statusConfig[app.status].color
+                      } ${statusConfig[app.status].bg}`}
+                    >
+                      {statusConfig[app.status].label}
+                    </span>
+
+                    {/* date */}
+                    <span className="font-mono textxs text-text-muted">
+                      {new Date(app.appliedAt).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+          )}
+        </div>
+        {/* cols-span-2 div */}
+      </div>
+      {/* ------RIGHT SIDE------ */}
+      <div className="col-span-1">
+        <div className="bg-surface border border-border rounded-xl p-5">
+          <div className="mb-150">
+            <h1 className="font-display text-2xl font-black text-text-primary">
+              Right Panel
+            </h1>
+            <p className="text-sm text-text-muted mt-1">
+              Coming soooooooon
+            </p>
           </div>
-        )}
+        </div>
       </div>
 
       {/* LAST DIV */}
