@@ -65,17 +65,35 @@ export class AuthService {
   //  UPDATING ACC
   async updateProfile(
     userId: string,
-    data: { name?: string; email?: string; password?: string },
+    data: {
+      name?: string;
+      email?: string;
+      currentPassword?: string;
+      password?: string;
+    },
   ) {
-    // if password is being changed, hash it first
+    // if changing password, verify current password first
     if (data.password) {
+      if (!data.currentPassword) {
+        throw new UnauthorizedException('Current password is required');
+      }
+
+      const user = await this.prisma.user.findUnique({ where: { id: userId } });
+      if (!user) throw new UnauthorizedException('User not found');
+
+      const valid = await bcrypt.compare(data.currentPassword, user.password);
+      if (!valid)
+        throw new UnauthorizedException('Current password is incorrect');
+
       data.password = await bcrypt.hash(data.password, 10);
     }
 
-    // if email is changing, check it's not taken
-    if (data.email) {
+    // remove currentpassword before passing to prisma
+    const { currentPassword: _, ...updateData } = data;
+
+    if (updateData.email) {
       const existing = await this.prisma.user.findUnique({
-        where: { email: data.email },
+        where: { email: updateData.email },
       });
       if (existing && existing.id !== userId) {
         throw new ConflictException('Email already in use');
@@ -84,7 +102,7 @@ export class AuthService {
 
     return this.prisma.user.update({
       where: { id: userId },
-      data,
+      data: updateData,
       select: { id: true, email: true, name: true, createdAt: true },
     });
   }

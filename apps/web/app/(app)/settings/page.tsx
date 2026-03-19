@@ -85,12 +85,14 @@ export default function SettingsPage() {
     if (!newPassword) return;
     setSavingPassword(true);
     try {
-      await api.patch("/auth/me", { password: newPassword });
+      await api.patch("/auth/me", { currentPassword, password: newPassword });
       setCurrentPassword("");
       setNewPassword("");
       toast.success("Password updated");
-    } catch {
-      toast.error("Failed to update password");
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { message?: string } } })
+        ?.response?.data?.message;
+      toast.error(msg || "Failed to update password");
     } finally {
       setSavingPassword(false);
     }
@@ -119,7 +121,7 @@ export default function SettingsPage() {
     router.push("/login");
   }
 
-  // ── stats derived from redux ──
+  // ── stats from redux ──
   const stats = {
     SAVED: applications.filter((a) => a.status === "SAVED").length,
     APPLIED: applications.filter((a) => a.status === "APPLIED").length,
@@ -136,17 +138,9 @@ export default function SettingsPage() {
     REJECTED: "text-status-rejected",
   };
 
+  //   theme picker
   const { theme, setTheme } = useTheme();
-  const [themePickerOpen, setThemePickerOpen] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
 
-  function closeThemePicker() {
-    setIsClosing(true);
-    setTimeout(() => {
-      setThemePickerOpen(false);
-      setIsClosing(false);
-    }, 150);
-  }
   return (
     <div className="max-w-2xl">
       {/* page header */}
@@ -226,6 +220,20 @@ export default function SettingsPage() {
 
           <div className="flex flex-col gap-2">
             <label className="text-xs font-semibold uppercase tracking-widest text-text-muted">
+              Current password
+            </label>
+            <input
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              placeholder="••••••••"
+              className={inputClass}
+              required
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-semibold uppercase tracking-widest text-text-muted">
               New password
             </label>
             <input
@@ -252,20 +260,12 @@ export default function SettingsPage() {
 
       {/* ── SECTION 2: APPEARANCE ── */}
       <Section title="Appearance" description="Customize how Apptrackr looks">
-        <p className="text-sm text-text-muted">
-          Use the theme toggle in the sidebar to switch between light, dark, and
-          system modes.
-        </p>
-
         {/* theme toggle */}
-        <div className="max-w-30">
-          <div
-            className={`flex items-center gap-1 bg-bg rounded-sm p-0.5 pt-3 ${isClosing ? "animate-out fade-out zoom-out-90 duration-150" : "animate-in fade-in zoom-in-90 duration-150"}`}
-          >
+        <div className="relative -py-1">
+          <div className="flex items-center gap-1 bg-bg rounded-sm">
             <button
               onClick={() => {
                 setTheme("light");
-                closeThemePicker();
               }}
               title="Light mode"
               className={`p-1.5 rounded-sm transition-colors cursor-pointer ${
@@ -280,7 +280,6 @@ export default function SettingsPage() {
             <button
               onClick={() => {
                 setTheme("system");
-                closeThemePicker();
               }}
               title="System (auto)"
               className={`p-1.5 rounded-sm transition-colors cursor-pointer ${
@@ -295,7 +294,6 @@ export default function SettingsPage() {
             <button
               onClick={() => {
                 setTheme("dark");
-                closeThemePicker();
               }}
               title="Dark mode"
               className={`p-1.5 rounded-sm transition-colors cursor-pointer ${

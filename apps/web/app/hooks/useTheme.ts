@@ -16,6 +16,14 @@ function getEffectiveTheme(theme: Theme): "light" | "dark" {
 // applies or removes the .dark
 function applyTheme(theme: Theme) {
   const effective = getEffectiveTheme(theme);
+
+  document.documentElement.classList.add(
+    "transition-colors",
+    "duration-300",
+    "ease-in-out"
+  );
+
+
   if (effective === "dark") {
     document.documentElement.classList.add("dark");
   } else {
