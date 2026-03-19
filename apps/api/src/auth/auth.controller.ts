@@ -2,9 +2,11 @@ import {
   Controller,
   Post,
   Get,
+  Delete,
   Body,
   UseGuards,
   Request,
+  Patch,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
@@ -28,5 +30,22 @@ export class AuthController {
   @Get('me')
   getMe(@Request() req: { user: { userId: string; email: string } }) {
     return this.authService.getMe(req.user.userId);
+  }
+
+  // delete account
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('me')
+  deleteAccount(@Request() req: { user: { userId: string; email: string } }) {
+    return this.authService.deleteAccount(req.user.userId);
+  }
+
+  // update account
+  @UseGuards(AuthGuard('jwt'))
+  @Patch('me')
+  updateProfile(
+    @Request() req: { user: { userId: string; email: string } },
+    @Body() body: { name?: string; email?: string; password?: string },
+  ) {
+    return this.authService.updateProfile(req.user.userId, body);
   }
 }

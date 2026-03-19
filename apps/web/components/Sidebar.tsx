@@ -13,6 +13,7 @@ import {
   Monitor,
   MoonStar,
   Moon,
+  Settings,
 } from "lucide-react";
 import { useTheme } from "@/app/hooks/useTheme";
 import { useState } from "react";
@@ -20,6 +21,8 @@ import { useState } from "react";
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/applications", label: "Applications", icon: BriefcaseBusiness },
+  { href: "/settings", label: "Settings", icon: Settings },
+
 ];
 
 export default function Sidebar() {

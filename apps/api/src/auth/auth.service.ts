@@ -57,4 +57,35 @@ export class AuthService {
       access_token: this.jwt.sign(payload),
     };
   }
+
+  async deleteAccount(userId: string) {
+    await this.prisma.user.delete({ where: { id: userId } });
+  }
+
+  //  UPDATING ACC
+  async updateProfile(
+    userId: string,
+    data: { name?: string; email?: string; password?: string },
+  ) {
+    // if password is being changed, hash it first
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
+
+    // if email is changing, check it's not taken
+    if (data.email) {
+      const existing = await this.prisma.user.findUnique({
+        where: { email: data.email },
+      });
+      if (existing && existing.id !== userId) {
+        throw new ConflictException('Email already in use');
+      }
+    }
+
+    return this.prisma.user.update({
+      where: { id: userId },
+      data,
+      select: { id: true, email: true, name: true, createdAt: true },
+    });
+  }
 }
