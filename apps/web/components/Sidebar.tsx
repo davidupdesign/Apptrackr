@@ -14,15 +14,15 @@ import {
   MoonStar,
   Moon,
   Settings,
+  ChevronUp,
 } from "lucide-react";
 import { useTheme } from "@/app/hooks/useTheme";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/applications", label: "Applications", icon: BriefcaseBusiness },
   { href: "/settings", label: "Settings", icon: Settings },
-
 ];
 
 export default function Sidebar() {
@@ -31,27 +31,32 @@ export default function Sidebar() {
   const user = useSelector((state: RootState) => state.auth.user);
 
   const { theme, setTheme } = useTheme();
-  const [themePickerOpen, setThemePickerOpen] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
 
-  function closeThemePicker() {
-    setIsClosing(true);
-    setTimeout(() => {
-      setThemePickerOpen(false);
-      setIsClosing(false);
-    }, 150);
-  }
+  const [popupOpen, setPopupOpen] = useState(false);
+  const popupRef = useRef<HTMLDivElement>(null);
 
   function handleLogout() {
     dispatch(logout());
     window.location.href = "/login";
   }
 
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
+        setPopupOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  });
+
   return (
-    <aside className="fixed top-0 left-0 h-screen w-60 flex flex-col bg-surface border-r border-border">
+    <aside className="relative rounded-xl w-60 h-full flex flex-col bg-accent border-r border-border">
       {/* logo */}
       <div className="px-6 pt-8 pb-6">
-        <span className="font-display text-lg font-black text-text-primary">
+        <span className="font-display text-lg font-black text-white">
           Apptrackr
         </span>
       </div>
@@ -64,10 +69,10 @@ export default function Sidebar() {
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm border-l-2 transition-colors ${
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm transition-colors ${
                 isActive
-                  ? "text-accent bg-bg border-accent font-semibold"
-                  : "text-text-muted border-transparent hover:text-text-primary"
+                  ? "text-accent bg-white/90 font-semibold"
+                  : "text-white/70 hover:text-white hover:bg-white/10"
               }`}
             >
               <Icon size={16} />
@@ -80,95 +85,77 @@ export default function Sidebar() {
       {/* spaveer */}
       <div className="flex-1" />
 
-      {/* BOTTOM */}
-      <div className="px-6 py-6 border-t border-border">
-        {/* user info */}
-        {user && (
-          <div className="mb-4">
-            <p className="text-sm font-semibold text-text-primary">
-              {user.name}
-            </p>
-            <p className="text-xs text-text-muted mt-0.5">{user.email}</p>
+      {/* BOTTOm — user section with popup */}
+      <div className="px-4 py-4 border-t border-border/40 relative" ref={popupRef}>
+        {/* popup — floats above user row */}
+        {popupOpen && (
+          <div className="absolute bottom-full left-3 right-3 mb-2 bg-bg border border-border rounded-xl shadow-lg overflow-hidden">
+            {/* theme row */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+              <span className="text-xs font-semibold uppercase tracking-widest text-text-muted">
+                Theme
+              </span>
+              <div className="flex items-center gap-1 bg-bg rounded-sm p-0.5">
+                <button
+                  onClick={() => setTheme("light")}
+                  title="Light"
+                  className={`p-1.5 rounded-sm transition-colors cursor-pointer ${theme === "light" ? "text-accent bg-surface" : "text-text-muted hover:text-text-primary"}`}
+                >
+                  <Sun size={13} />
+                </button>
+                <button
+                  onClick={() => setTheme("system")}
+                  title="System"
+                  className={`p-1.5 rounded-sm transition-colors cursor-pointer ${theme === "system" ? "text-accent bg-surface" : "text-text-muted hover:text-text-primary"}`}
+                >
+                  <Monitor size={13} />
+                </button>
+                <button
+                  onClick={() => setTheme("dark")}
+                  title="Dark"
+                  className={`p-1.5 rounded-sm transition-colors cursor-pointer ${theme === "dark" ? "text-accent bg-surface" : "text-text-muted hover:text-text-primary"}`}
+                >
+                  <Moon size={13} />
+                </button>
+              </div>
+            </div>
+
+            {/* logout row */}
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-2 px-4 py-3 text-sm text-text-muted hover:text-status-rejected hover:bg-bg transition-colors cursor-pointer"
+            >
+              <LogOut size={14} />
+              Log out
+            </button>
           </div>
         )}
 
-        {/* LOGOUT + THEME BUTTON */}
-        <div className="flex items-center justify-between">
-          {/* logout button */}
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 text-xs text-text-muted hover:text-status-rejected transition-colors cursor-pointer"
-          >
-            <LogOut size={14} />
-            Log out
-          </button>
-
-          {/* theme toggle */}
-          <div className="relative">
-            {themePickerOpen ? (
-              // EXPANDED — all three options visible
-              <div className={`flex items-center gap-1 bg-bg rounded-sm p-0.5 ${isClosing ? "animate-out fade-out zoom-out-95 duration-150" : "animate-in fade-in zoom-in-90 duration-150"}`}>
-                <button
-                  onClick={() => {
-                    setTheme("light");
-                    closeThemePicker();
-                  }}
-                  title="Light mode"
-                  className={`p-1 rounded-sm transition-colors cursor-pointer ${
-                    theme === "light"
-                      ? "text-accent bg-surface"
-                      : "text-text-muted hover:text-text-primary"
-                  }`}
-                >
-                  <Sun size={14} />
-                </button>
-
-                <button
-                  onClick={() => {
-                    setTheme("system");
-                    closeThemePicker();
-                  }}
-                  title="System (auto)"
-                  className={`p-1 rounded-sm transition-colors cursor-pointer ${
-                    theme === "system"
-                      ? "text-accent bg-surface"
-                      : "text-text-muted hover:text-text-primary"
-                  }`}
-                >
-                  <Monitor size={14} />
-                </button>
-
-                <button
-                  onClick={() => {
-                    setTheme("dark");
-                    closeThemePicker();
-                  }}
-                  title="Dark mode"
-                  className={`p-1 rounded-sm transition-colors cursor-pointer ${
-                    theme === "dark"
-                      ? "text-accent bg-surface"
-                      : "text-text-muted hover:text-text-primary"
-                  }`}
-                >
-                  <Moon size={14} />
-                </button>
-              </div>
-            ) : (
-              // COLLAPSED — single button showing the active mode icon
-              <button
-                onClick={() => setThemePickerOpen(true)}
-                title="Change theme"
-                className="p-1.5 bg-bg hover:bg-transparent rounded-sm text-text-muted hover:text-text-primary transition-colors cursor-pointer"
-              >
-                {/* show the icon that matches the current theme */}
-                {theme === "light" && <Sun size={14} />}
-                {theme === "dark" && <Moon size={14} />}
-                {theme === "system" && <Monitor size={14} />}
-              </button>
-            )}
+        {/* user row */}
+        <button
+          onClick={() => setPopupOpen((prev) => !prev)}
+          className="w-full flex items-center gap-3 rounded-sm hover:bg-bg/20 hover:rounded-xl px-3 py-2 transition-colors cursor-pointer"
+        >
+          {/* avatar initial */}
+          <div className="w-8 h-8 rounded-full bg-bg border border-white/30 flex items-center justify-center shrink-0">
+            <span className="font-display text-xs font-black text-accent">
+              {user?.name?.charAt(0).toUpperCase() ?? "?"}
+            </span>
           </div>
-        </div>
-        {/* last div */}
+          {/* name + email */}
+          <div className="flex-1 text-left overflow-hidden">
+            <p className="text-sm font-semibold text-white truncate">
+              {user?.name}
+            </p>
+            <p className="text-xs text-white/60 truncate">{user?.email}</p>
+          </div>
+          {/* chevron flips when open */}
+          <ChevronUp
+            size={16}
+            strokeWidth={3}
+            className={`text-white/80 transition-transform duration-200 shrink-0 ${popupOpen ? "rotate-0" : "rotate-180"}`}
+          />
+        </button>
       </div>
     </aside>
   );
