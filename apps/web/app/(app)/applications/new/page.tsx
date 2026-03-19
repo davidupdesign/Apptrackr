@@ -155,7 +155,7 @@ export default function NewApplicationPage() {
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="ex. https://newjob.com/"
+              placeholder="ex. https://..."
               className={inputClass}
             />
           </div>

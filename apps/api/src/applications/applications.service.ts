@@ -67,7 +67,10 @@ export class ApplicationsService {
 
     return this.prisma.application.update({
       where: { id },
-      data,
+      data: {
+        ...data,
+        ...(data.appliedAt ? { appliedAt: new Date(data.appliedAt) } : {}),
+      },
     });
   }
 
