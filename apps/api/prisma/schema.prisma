@@ -41,5 +41,6 @@ model Application {
   salary    Int?
   url       String?
   updatedAt DateTime @updatedAt
+  isFavorite Boolean @default(false)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

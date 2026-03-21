@@ -14,7 +14,7 @@ export class ApplicationsService {
   async findAll(userId: string) {
     return this.prisma.application.findMany({
       where: { userId },
-      orderBy: { appliedAt: 'desc' },
+      orderBy: [{ appliedAt: 'desc' }, { id: 'desc' }],
     });
   }
 
@@ -60,6 +60,7 @@ export class ApplicationsService {
       salary?: number;
       url?: string;
       appliedAt?: string;
+      isFavorite?: boolean;
     },
   ) {
     // first verify it exists and belongs to the user

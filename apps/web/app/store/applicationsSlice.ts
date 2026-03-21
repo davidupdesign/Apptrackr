@@ -11,6 +11,7 @@ interface Application {
   salary?: number | null;
   url?: string | null;
   updatedAt: string;
+  isFavorite: boolean;
 }
 
 export interface ApplicationsState {

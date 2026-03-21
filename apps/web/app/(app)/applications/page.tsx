@@ -7,7 +7,7 @@ import {
   setError,
   setLoading,
 } from "@/app/store/applicationsSlice";
-import { Plus } from "lucide-react";
+import { Plus, Star } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -79,6 +79,24 @@ export default function ApplicationsPage() {
   const filtered =
     activeTab === "ALL" ? list : list.filter((a) => a.status === activeTab);
 
+  // fav
+  async function handleFavoriteToggle(
+    e: React.MouseEvent,
+    id: string,
+    current: boolean,
+  ) {
+    e.preventDefault(); // preventing link nav
+
+    try {
+      const { data } = await api.patch(`/applications/${id}`, {
+        isFavorite: !current,
+      });
+      dispatch(setApplications(list.map((a) => (a.id === id ? data : a))));
+    } catch {
+      dispatch(setError("Failed to update favorite status"));
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -148,12 +166,23 @@ export default function ApplicationsPage() {
                 <p className="text-xs text-text-muted mt-0.5">{app.role}</p>
               </div>
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-5">
                 <span
                   className={`text-xs font-semibold uppercase tracking-widest px-2.5 py-1 rounded-sm ${statusConfig[app.status].color} ${statusConfig[app.status].bg}`}
                 >
                   {statusConfig[app.status].label}
                 </span>
+                <Star
+                  size={16}
+                  onClick={(e) =>
+                    handleFavoriteToggle(e, app.id, app.isFavorite)
+                  }
+                  className={`transition-colors cursor-pointer ${
+                    app.isFavorite
+                      ? "text-accent fill-accent"
+                      : "text-text-muted hover:text-accent"
+                  }`}
+                />
                 <span className="font-mono text-xs text-text-muted">
                   {new Date(app.appliedAt).toLocaleDateString("en-US", {
                     month: "short",

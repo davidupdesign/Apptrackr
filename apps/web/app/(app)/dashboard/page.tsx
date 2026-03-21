@@ -8,13 +8,7 @@ import {
   setLoading,
 } from "@/app/store/applicationsSlice";
 import StatusBadge from "@/components/StatusBadge";
-import {
-  ArrowUpLeft,
-  ArrowUpLeftSquare,
-  CircleArrowOutUpRight,
-  MoveRight,
-  MoveUpRight,
-} from "lucide-react";
+import { ArrowUpLeft } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -116,7 +110,7 @@ export default function DashboardPage() {
         </div>
 
         {/* stat cards */}
-        <div className="grid grid-cols-5 gap-4 mb-10">
+        <div className="grid grid-cols-5 gap-4 mb-10 pl-5">
           {Object.entries(statusConfig).map(([status, config]) => (
             <div
               key={status}
@@ -135,7 +129,7 @@ export default function DashboardPage() {
         </div>
 
         {/* recent applications */}
-        <div>
+        <div className="pl-5">
           <h2 className="font-display text-base font-black text-text-primary mb-4">
             Recent Applications
           </h2>
@@ -155,7 +149,7 @@ export default function DashboardPage() {
               {recent.map((app, index) => (
                 <div
                   key={app.id}
-                  className={`flex items-center justify-between px-6 py-4 ${index !== recent.length - 1 ? "border-b border-border" : ""}`}
+                  className={`flex items-center justify-between px-4 py-4 ${index !== recent.length - 1 ? "border-b border-border" : ""}`}
                 >
                   <div>
                     <p className="text-sm font-semibold text-text-primary">
@@ -215,7 +209,7 @@ export default function DashboardPage() {
       {/* ------RIGHT SIDE------ */}
       <div className="col-span-1">
         <div className="bg-surface border border-border rounded-xl p-5">
-          <div className="mb-150">
+          <div className="mb-170">
             <h1 className="font-display text-2xl font-black text-text-primary">
               Right Panel
             </h1>
