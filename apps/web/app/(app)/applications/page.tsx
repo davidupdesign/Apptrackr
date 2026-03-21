@@ -11,6 +11,7 @@ import { Plus, Star } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 
 const statusConfig = {
   SAVED: {
@@ -80,20 +81,20 @@ export default function ApplicationsPage() {
     activeTab === "ALL" ? list : list.filter((a) => a.status === activeTab);
 
   // fav
-  async function handleFavoriteToggle(
-    e: React.MouseEvent,
-    id: string,
-    current: boolean,
-  ) {
-    e.preventDefault(); // preventing link nav
-
+  async function handleFavoriteToggle(e: React.MouseEvent, id: string, current: boolean) {
+    e.preventDefault();
+  
+    // blocking if trying to favorite more
+    if (!current && list.filter((a) => a.isFavorite).length >= 6) {
+      toast.error("You can only favourite up to 6 applications");
+      return;
+    }
+  
     try {
-      const { data } = await api.patch(`/applications/${id}`, {
-        isFavorite: !current,
-      });
-      dispatch(setApplications(list.map((a) => (a.id === id ? data : a))));
+      const { data } = await api.patch(`/applications/${id}`, { isFavorite: !current });
+      dispatch(setApplications(list.map((a) => a.id === id ? data : a)));
     } catch {
-      dispatch(setError("Failed to update favorite status"));
+      dispatch(setError("Failed to update favourite"));
     }
   }
 
