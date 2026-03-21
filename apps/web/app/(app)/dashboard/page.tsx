@@ -7,6 +7,15 @@ import {
   setError,
   setLoading,
 } from "@/app/store/applicationsSlice";
+import StatusBadge from "@/components/StatusBadge";
+import {
+  ArrowUpLeft,
+  ArrowUpLeftSquare,
+  CircleArrowOutUpRight,
+  MoveRight,
+  MoveUpRight,
+} from "lucide-react";
+import Link from "next/link";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -71,7 +80,7 @@ export default function DashboardPage() {
 
   //5 most recetn
 
-  const recent = list.slice(0, 5);
+  const recent = list.slice(0, 6);
 
   if (loading) {
     return (
@@ -79,6 +88,18 @@ export default function DashboardPage() {
         <p className="text-sm text-text-muted">Loading...</p>
       </div>
     );
+  }
+
+  async function handleStatusChange(id: string, newStatus: string) {
+    try {
+      const { data } = await api.patch(`/applications/${id}`, {
+        status: newStatus,
+      });
+      // updating only this one application in redux, no refetching
+      dispatch(setApplications(list.map((a) => (a.id === id ? data : a))));
+    } catch {
+      dispatch(setError("Failed to update status"));
+    }
   }
 
   return (
@@ -145,13 +166,12 @@ export default function DashboardPage() {
 
                   <div className="flex items-center gap-4">
                     {/* status badge */}
-                    <span
-                      className={`text-xs font-semibold uppercase tracking-widest px-2.5 py-1 rounded-sm ${
-                        statusConfig[app.status].color
-                      } ${statusConfig[app.status].bg}`}
-                    >
-                      {statusConfig[app.status].label}
-                    </span>
+                    <StatusBadge
+                      status={app.status}
+                      onChange={(newStatus) =>
+                        handleStatusChange(app.id, newStatus)
+                      }
+                    />
 
                     {/* date */}
                     <span className="font-mono textxs text-text-muted">
@@ -163,6 +183,30 @@ export default function DashboardPage() {
                   </div>
                 </div>
               ))}
+              {/* <a
+                href="/applications"
+                className="flex m-5 mt-5 gap-2 items-center justify-end text-sm text-text-muted mt-1 cursor-pointer hover:underline hover:decoration-accent hover:decoration-2 transition-transform hover:underline-offset-4  duration-200 group "
+              >
+                View All Applications
+                <ArrowUpLeft
+                  size={16}
+                  className="rotate-90 group-hover:rotate-135 group-hover:stroke-3 group-hover:text-accent transition-transform"
+                />
+              </a> */}
+
+              <Link
+                href="/applications"
+                className="relative group flex m-5 items-center gap-2 mt-3 text-text-muted text-sm hover:text-accent transition-colors duration-300 w-fit ml-auto"
+              >
+                View All Applications
+                <span className="transition-transform duration-300 group-hover:translate-x-0.5">
+                  <ArrowUpLeft
+                    size={16}
+                    className="rotate-90 group-hover:rotate-135 duration-300"
+                  />
+                </span>
+                <span className="absolute bottom-0 left-0 w-full h-px bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+              </Link>
             </div>
           )}
         </div>
@@ -175,9 +219,7 @@ export default function DashboardPage() {
             <h1 className="font-display text-2xl font-black text-text-primary">
               Right Panel
             </h1>
-            <p className="text-sm text-text-muted mt-1">
-              Coming soooooooon
-            </p>
+            <p className="text-sm text-text-muted mt-1">Coming soooooooon</p>
           </div>
         </div>
       </div>

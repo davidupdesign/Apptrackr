@@ -62,6 +62,4 @@ body {
   transition: background-color 150ms ease, color 150ms ease;
 }
 
-a {
-  text-decoration: none;
-}
+

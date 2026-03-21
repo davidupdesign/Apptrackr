@@ -88,7 +88,7 @@ export default function ApplicationsPage() {
   }
 
   return (
-    <div>
+    <div className="p-5">
       {/* header */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -134,7 +134,7 @@ export default function ApplicationsPage() {
           )}
         </div>
       ) : (
-        <div className="bg-surface border border-border rounded overflow-hidden">
+        <div className="bg-surface border border-border rounded-xl overflow-hidden">
           {filtered.map((app, index) => (
             <Link
               key={app.id}

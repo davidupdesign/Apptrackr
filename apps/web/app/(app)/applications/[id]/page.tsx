@@ -170,7 +170,7 @@ export default function ApplicationDetailPage() {
 
   //   -----RETURNN------
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-2xl p-5">
       {/* header */}
       <div className="mb-8">
         <Link

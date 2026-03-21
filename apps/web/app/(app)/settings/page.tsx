@@ -142,7 +142,7 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-2xl p-5">
       {/* page header */}
       <div className="mb-10">
         <h1 className="font-display text-2xl font-black text-text-primary">
