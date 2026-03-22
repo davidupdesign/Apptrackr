@@ -8,11 +8,6 @@ import {
 } from "@/app/store/applicationsSlice";
 import {
   ArrowLeft,
-  BookmarkX,
-  Delete,
-  Trash,
-  Trash2,
-  X,
   CopyX,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";

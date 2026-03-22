@@ -78,7 +78,7 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center juistify-center h-64">
+      <div className="flex items-center justify-center h-64">
         <p className="text-sm text-text-muted">Loading...</p>
       </div>
     );

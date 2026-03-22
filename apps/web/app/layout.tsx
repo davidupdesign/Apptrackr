@@ -26,8 +26,12 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Apptrackr",
+  title: "Apptrackr - Job Application Tracker",
   description: "Keep track of your job applications",
+  icons: {
+    icon: "/icon.webp",
+  },
+
 };
 
 export default function RootLayout({
