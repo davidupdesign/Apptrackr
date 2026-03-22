@@ -7,7 +7,7 @@ import {
   setError,
   setLoading,
 } from "@/app/store/applicationsSlice";
-import { Plus, Star } from "lucide-react";
+import { ArrowDown, ArrowUp, Plus, Star } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -58,6 +58,10 @@ export default function ApplicationsPage() {
   );
   const [activeTab, setActiveTab] = useState<Tab>("ALL");
 
+  const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState<"date" | "company" | "status">("date");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+
   useEffect(() => {
     // only fetches if we dont already have data
     if (list.length > 0) return;
@@ -77,8 +81,29 @@ export default function ApplicationsPage() {
   }, [dispatch, list.length]);
 
   // filter the list based on active tab
-  const filtered =
-    activeTab === "ALL" ? list : list.filter((a) => a.status === activeTab);
+  const filtered = list
+    // filter by tab
+    .filter((a) => activeTab === "ALL" || a.status === activeTab)
+    // filter by search
+    .filter((a) => {
+      const q = search.toLowerCase();
+      return (
+        a.company.toLowerCase().includes(q) || a.role.toLowerCase().includes(q)
+      );
+    })
+    // sort
+    .sort((a, b) => {
+      let comparison = 0;
+      if (sortBy === "date") {
+        comparison =
+          new Date(a.appliedAt).getTime() - new Date(b.appliedAt).getTime();
+      } else if (sortBy === "company") {
+        comparison = a.company.localeCompare(b.company);
+      } else if (sortBy === "status") {
+        comparison = a.status.localeCompare(b.status);
+      }
+      return sortDirection === "asc" ? comparison : -comparison;
+    });
 
   // fav
   async function handleFavoriteToggle(
@@ -130,6 +155,47 @@ export default function ApplicationsPage() {
           <Plus size={15} />
           New Application
         </Link>
+      </div>
+
+      {/* FILTERSS */}
+
+      {/* search + sort */}
+      <div className="flex items-center gap-3 mb-6">
+        {/* search */}
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search by company or role..."
+          className="flex-1 bg-surface border border-border rounded-sm text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent transition-colors py-2 px-3"
+        />
+
+        {/* sort */}
+        <select
+          value={sortBy}
+          onChange={(e) =>
+            setSortBy(e.target.value as "date" | "company" | "status")
+          }
+          className="bg-surface border border-border rounded-sm text-sm text-text-muted focus:outline-none focus:border-accent transition-colors py-2 px-3 cursor-pointer"
+        >
+          <option value="date">Date</option>
+          <option value="company">Company</option>
+          <option value="status">Status</option>
+        </select>
+
+        {/* sort dir */}
+        <button
+          onClick={() =>
+            setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"))
+          }
+          className="bg-surface border border-border rounded-sm p-2 text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+        >
+          {sortDirection === "asc" ? (
+            <ArrowUp size={14} />
+          ) : (
+            <ArrowDown size={14} />
+          )}
+        </button>
       </div>
 
       {/* filter tabs */}
