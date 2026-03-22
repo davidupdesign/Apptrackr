@@ -15,4 +15,20 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// response interceptor runs after every response
+// catches 401 (unauthorized) and logs the user out
+api.interceptors.response.use(
+  (response) => response, // pass through successful responses
+  (error) => {
+    if (error.response?.status === 401) {
+      // clearing token and cookie
+      localStorage.removeItem("token");
+      document.cookie = "token=; path=/; max-age=0";
+      // redirect to login
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  },
+);
+
 export default api;
