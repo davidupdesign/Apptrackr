@@ -147,9 +147,14 @@ export default function DashboardPage() {
           ) : (
             <div>
               {recent.map((app, index) => (
-                <div
+                <Link
+                  href={`/applications/${app.id}`}
                   key={app.id}
-                  className={`flex items-center justify-between px-4 py-4 ${index !== recent.length - 1 ? "border-b border-border" : ""}`}
+                  onNavigate={(e) => {
+                    const active = document.activeElement;
+                    if (active?.tagName === 'SELECT') e.preventDefault();
+                  }}
+                  className={`flex items-center rounded-lg justify-between px-4 py-4 hover:bg-surface  transition-colors duration-100 cursor-pointer ${index !== recent.length - 1 ? "border-b border-border" : ""}`}
                 >
                   <div>
                     <p className="text-sm font-semibold text-text-primary">
@@ -175,7 +180,7 @@ export default function DashboardPage() {
                       })}
                     </span>
                   </div>
-                </div>
+                </Link>
               ))}
               {/* <a
                 href="/applications"
@@ -207,7 +212,6 @@ export default function DashboardPage() {
         {/* cols-span-2 div */}
       </div>
 
-
       {/* ------RIGHT SIDE------ */}
 
       {/* <div className="col-span-1">
@@ -222,76 +226,106 @@ export default function DashboardPage() {
       </div> */}
 
       {/* ------RIGHT SIDE------ */}
-<div className="col-span-1 flex flex-col gap-6 pt-32">
+      <div className="col-span-1 flex flex-col gap-6 pt-32">
+        {/* total count */}
+        <div className="bg-surface border border-border rounded-xl p-5">
+          <h2 className="font-display text-base font-black text-text-primary mb-4">
+            Total Applications
+          </h2>
 
-{/* favourites */}
-<div className="bg-surface border border-border rounded-xl p-5">
-  <h1 className="font-display text-base font-black text-text-primary mb-4">
-    Favourites
-  </h1>
-
-  {list.filter((a) => a.isFavorite).length === 0 ? (
-    <p className="text-xs text-text-muted">
-      Star an application to pin it here.
-    </p>
-  ) : (
-    <div className="grid grid-cols-2 gap-3">
-      {list.filter((a) => a.isFavorite).slice(0, 6).map((app) => (
-        <Link
-          key={app.id}
-          href={`/applications/${app.id}`}
-          className="bg-bg border border-border rounded-lg p-3 flex flex-col gap-1.5 hover:border-accent transition-colors"
-        >
-          <p className="text-xs font-bold text-text-primary truncate">
-            {app.company}
-          </p>
-          <p className="text-xs text-text-muted truncate">{app.role}</p>
-          <span className={`text-xs font-semibold uppercase tracking-widest mt-1 ${statusConfig[app.status].color}`}>
-            {statusConfig[app.status].label}
-          </span>
-        </Link>
-      ))}
-    </div>
-  )}
-</div>
-
-{/* stats */}
-<div className="bg-surface border border-border rounded-xl p-5">
-  <h2 className="font-display text-base font-black text-text-primary mb-4">
-    Activity
-  </h2>
-
-  {(() => {
-    const now = new Date();
-
-    // start of this week (Monday)
-    const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - now.getDay() + 1);
-    startOfWeek.setHours(0, 0, 0, 0);
-
-    // start of this month
-    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-
-    const thisWeek = list.filter((a) => new Date(a.appliedAt) >= startOfWeek).length;
-    const thisMonth = list.filter((a) => new Date(a.appliedAt) >= startOfMonth).length;
-
-    return (
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-text-muted">This week</span>
-          <span className="font-mono text-xs font-semibold text-text-primary">{thisWeek} apps</span>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-text-muted">Total Count</span>
+              <span className="font-mono text-xs font-semibold text-text-primary">
+                {list.length}
+              </span>
+            </div>
+            <div className="w-full h-px bg-border" />
+          </div>
         </div>
-        <div className="w-full h-px bg-border" />
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-text-muted">This month</span>
-          <span className="font-mono text-xs font-semibold text-text-primary">{thisMonth} apps</span>
+
+        {/* favourites */}
+        <div className="bg-surface border border-border rounded-xl p-5">
+          <h1 className="font-display text-base font-black text-text-primary mb-4">
+            Favourites
+          </h1>
+
+          {list.filter((a) => a.isFavorite).length === 0 ? (
+            <p className="text-xs text-text-muted">
+              Star an application to pin it here.
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 gap-3">
+              {list
+                .filter((a) => a.isFavorite)
+                .slice(0, 6)
+                .map((app) => (
+                  <Link
+                    key={app.id}
+                    href={`/applications/${app.id}`}
+                    className="bg-bg border border-border rounded-lg p-3 flex flex-col gap-1.5 hover:border-accent transition-colors"
+                  >
+                    <p className="text-xs font-bold text-text-primary truncate">
+                      {app.company}
+                    </p>
+                    <p className="text-xs text-text-muted truncate">
+                      {app.role}
+                    </p>
+                    <span
+                      className={`text-xs font-semibold uppercase tracking-widest mt-1 ${statusConfig[app.status].color}`}
+                    >
+                      {statusConfig[app.status].label}
+                    </span>
+                  </Link>
+                ))}
+            </div>
+          )}
+        </div>
+
+        {/* stats */}
+        <div className="bg-surface border border-border rounded-xl p-5">
+          <h2 className="font-display text-base font-black text-text-primary mb-4">
+            Activity
+          </h2>
+
+          {(() => {
+            const now = new Date();
+
+            // start of this week (Monday)
+            const startOfWeek = new Date(now);
+            startOfWeek.setDate(now.getDate() - now.getDay() + 1);
+            startOfWeek.setHours(0, 0, 0, 0);
+
+            // start of this month
+            const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+            const thisWeek = list.filter(
+              (a) => new Date(a.appliedAt) >= startOfWeek,
+            ).length;
+            const thisMonth = list.filter(
+              (a) => new Date(a.appliedAt) >= startOfMonth,
+            ).length;
+
+            return (
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-text-muted">This week</span>
+                  <span className="font-mono text-xs font-semibold text-text-primary">
+                    {thisWeek} apps
+                  </span>
+                </div>
+                <div className="w-full h-px bg-border" />
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-text-muted">This month</span>
+                  <span className="font-mono text-xs font-semibold text-text-primary">
+                    {thisMonth} apps
+                  </span>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </div>
-    );
-  })()}
-</div>
-
-</div>
 
       {/* LAST DIV */}
     </div>

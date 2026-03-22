@@ -71,7 +71,8 @@ export default function ApplicationDetailPage() {
       setUrl(existing.url ?? "");
       setSalary(existing.salary?.toString() ?? "");
       setAppliedAt(
-        String(existing.appliedAt ?? new Date().toISOString()).split("T")[0] ?? ""
+        String(existing.appliedAt ?? new Date().toISOString()).split("T")[0] ??
+          "",
       );
       setNotes(existing.notes ?? "");
     } else {
@@ -170,175 +171,178 @@ export default function ApplicationDetailPage() {
 
   //   -----RETURNN------
   return (
-    <div className="max-w-2xl p-5">
-      {/* header */}
-      <div className="mb-8">
-        <Link
-          href="/applications"
-          className="flex items-center gap-1.5 text-xs text-text-muted hover:text-text-primary transition-colors mb-4"
-        >
-          <ArrowLeft size={13} />
-          Back to applications
-        </Link>
-        {/*
-         * We show the company + role as the page title once loaded.
-         * Falls back to "Application" while the form is still populating.
-         */}
-        <h1 className="font-display text-2xl font-black text-text-primary">
-          {company || "Application"}
-        </h1>
-        {role && <p className="text-sm text-text-muted mt-1">{role}</p>}
+    <div className="p-5">
+      <div className="">
+        {/* header */}
+        <div className="mb-8">
+          <Link
+            href="/applications"
+            className="flex items-center gap-1.5 text-xs text-text-muted hover:text-text-primary transition-colors mb-4"
+          >
+            <ArrowLeft size={13} />
+            Back to applications
+          </Link>
+          {/*
+           * We show the company + role as the page title once loaded.
+           * Falls back to "Application" while the form is still populating.
+           */}
+          <h1 className="font-display text-2xl font-black text-text-primary">
+            {company || "Application"}
+          </h1>
+          {role && <p className="text-sm text-text-muted mt-1">{role}</p>}
+        </div>
+
+        {/* FORM CARD */}
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-surface border border-border rounded-xl p-8">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              {/* company */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold text-text-muted uppercase tracking-widest">
+                  Company <span className="text-status-rejected">*</span>
+                </label>
+                <input
+                  type="text"
+                  className={inputClass}
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  placeholder="ex. Google"
+                  required
+                />
+              </div>
+
+              {/* ROLE */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold uppercase tracking-widest text-text-muted">
+                  Role <span className="text-status-rejected">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                  required
+                  className={inputClass}
+                />
+              </div>
+
+              {/* STATUS */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold uppercase tracking-widest text-text-muted">
+                  Status
+                </label>
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value as Status)}
+                  className={inputClass}
+                >
+                  {statusOptions.map((s) => (
+                    <option key={s} value={s}>
+                      {s.charAt(0) + s.slice(1).toLowerCase()}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* JOB URL */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold uppercase tracking-widest text-text-muted">
+                  Job URL{" "}
+                  <span className="text-text-muted font-normal normal-case tracking-normal">
+                    (optional)
+                  </span>
+                </label>
+                <input
+                  type="url"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="https://..."
+                  className={inputClass}
+                />
+              </div>
+
+              {/* SALARY */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold uppercase tracking-widest text-text-muted">
+                  Salary{" "}
+                  <span className="text-text-muted font-normal normal-case tracking-normal">
+                    (optional)
+                  </span>
+                </label>
+                <input
+                  type="number"
+                  value={salary}
+                  onChange={(e) => setSalary(e.target.value)}
+                  placeholder="95000"
+                  className={inputClass}
+                />
+              </div>
+
+              {/* applied at */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold uppercase tracking-widest text-text-muted">
+                  Date applied
+                </label>
+                <input
+                  type="date"
+                  value={appliedAt}
+                  onChange={(e) => setAppliedAt(e.target.value)}
+                  className={inputClass}
+                />
+              </div>
+
+              {/* NOTES */}
+              <div className="flex flex-col gap-2">
+                <label className="text-xs font-semibold uppercase tracking-widest text-text-muted">
+                  Notes{" "}
+                  <span className="text-text-muted font-normal normal-case tracking-normal">
+                    (optional)
+                  </span>
+                </label>
+                <textarea
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Recruiter contact, interview notes..."
+                  rows={4}
+                  className={`${inputClass} resize-none`}
+                />
+              </div>
+
+              {/* ERROR */}
+              {error && <p className="text-xs text-status-rejected">{error}</p>}
+
+              {/* BUTTONS */}
+              <div className="flex items-center justify-between pt-2">
+                <div className="flex items-center gap-3">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="bg-accent hover:bg-accent-hover disabled:opacity-50 text-[#EFE6DE] text-sm font-semibold px-6 py-3 rounded-sm transition-colors cursor-pointer disabled:cursor-not-allowed"
+                  >
+                    {loading ? "Saving..." : "Save changes"}
+                  </button>
+                  <Link
+                    href="/applications"
+                    className="text-sm text-text-muted hover:text-text-primary transition-colors"
+                  >
+                    Cancel
+                  </Link>
+                </div>
+
+                {/* DELETE BUTTON */}
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  className="flex items-center gap-1.5 text-sm text-status-rejected hover:opacity-70 disabled:opacity-50 transition-opacity cursor-pointer disabled:cursor-not-allowed"
+                >
+                  <CopyX size={14} strokeWidth={2} />
+                  {deleting ? "Deleting..." : "Delete"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
-
-      {/* FORM CARD */}
-      <div className="bg-surface border border-border rounded p-8">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-          {/* company */}
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-semibold text-text-muted uppercase tracking-widest">
-              Company <span className="text-status-rejected">*</span>
-            </label>
-            <input
-              type="text"
-              className={inputClass}
-              value={company}
-              onChange={(e) => setCompany(e.target.value)}
-              placeholder="ex. Google"
-              required
-            />
-          </div>
-
-          {/* ROLE */}
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-semibold uppercase tracking-widest text-text-muted">
-              Role <span className="text-status-rejected">*</span>
-            </label>
-            <input
-              type="text"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              required
-              className={inputClass}
-            />
-          </div>
-
-          {/* STATUS */}
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-semibold uppercase tracking-widest text-text-muted">
-              Status
-            </label>
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value as Status)}
-              className={inputClass}
-            >
-              {statusOptions.map((s) => (
-                <option key={s} value={s}>
-                  {s.charAt(0) + s.slice(1).toLowerCase()}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* JOB URL */}
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-semibold uppercase tracking-widest text-text-muted">
-              Job URL{" "}
-              <span className="text-text-muted font-normal normal-case tracking-normal">
-                (optional)
-              </span>
-            </label>
-            <input
-              type="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://..."
-              className={inputClass}
-            />
-          </div>
-
-          {/* SALARY */}
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-semibold uppercase tracking-widest text-text-muted">
-              Salary{" "}
-              <span className="text-text-muted font-normal normal-case tracking-normal">
-                (optional)
-              </span>
-            </label>
-            <input
-              type="number"
-              value={salary}
-              onChange={(e) => setSalary(e.target.value)}
-              placeholder="95000"
-              className={inputClass}
-            />
-          </div>
-
-          {/* applied at */}
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-semibold uppercase tracking-widest text-text-muted">
-              Date applied
-            </label>
-            <input
-              type="date"
-              value={appliedAt}
-              onChange={(e) => setAppliedAt(e.target.value)}
-              className={inputClass}
-            />
-          </div>
-
-          {/* NOTES */}
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-semibold uppercase tracking-widest text-text-muted">
-              Notes{" "}
-              <span className="text-text-muted font-normal normal-case tracking-normal">
-                (optional)
-              </span>
-            </label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Recruiter contact, interview notes..."
-              rows={4}
-              className={`${inputClass} resize-none`}
-            />
-          </div>
-
-          {/* ERROR */}
-          {error && <p className="text-xs text-status-rejected">{error}</p>}
-
-          {/* BUTTONS */}
-          <div className="flex items-center justify-between pt-2">
-            <div className="flex items-center gap-3">
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-accent hover:bg-accent-hover disabled:opacity-50 text-[#EFE6DE] text-sm font-semibold px-6 py-3 rounded-sm transition-colors cursor-pointer disabled:cursor-not-allowed"
-              >
-                {loading ? "Saving..." : "Save changes"}
-              </button>
-              <Link
-                href="/applications"
-                className="text-sm text-text-muted hover:text-text-primary transition-colors"
-              >
-                Cancel
-              </Link>
-            </div>
-
-            {/* DELETE BUTTON */}
-            <button
-              type="button"
-              onClick={handleDelete}
-              disabled={deleting}
-              className="flex items-center gap-1.5 text-sm text-status-rejected hover:opacity-70 disabled:opacity-50 transition-opacity cursor-pointer disabled:cursor-not-allowed"
-            >
-              <CopyX size={14} strokeWidth={2} />
-              {deleting ? "Deleting..." : "Delete"}
-            </button>
-          </div>
-        </form>
-      </div>
-
       {/* last div */}
     </div>
   );

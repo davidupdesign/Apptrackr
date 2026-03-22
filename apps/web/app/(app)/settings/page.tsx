@@ -37,7 +37,7 @@ function Section({
 
 // ─── input ─────────────────────────────────────────────────────────
 const inputClass =
-  "w-full bg-bg border border-border rounded-sm text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent transition-colors py-3 px-3.5";
+  "w-full bg-surface border border-border rounded-sm text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-accent transition-colors py-3 px-3.5";
 
 // ─── page ──────────────────────────────────────────────────────────
 export default function SettingsPage() {

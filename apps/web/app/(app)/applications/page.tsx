@@ -81,18 +81,24 @@ export default function ApplicationsPage() {
     activeTab === "ALL" ? list : list.filter((a) => a.status === activeTab);
 
   // fav
-  async function handleFavoriteToggle(e: React.MouseEvent, id: string, current: boolean) {
+  async function handleFavoriteToggle(
+    e: React.MouseEvent,
+    id: string,
+    current: boolean,
+  ) {
     e.preventDefault();
-  
+
     // blocking if trying to favorite more
     if (!current && list.filter((a) => a.isFavorite).length >= 6) {
       toast.error("You can only favourite up to 6 applications");
       return;
     }
-  
+
     try {
-      const { data } = await api.patch(`/applications/${id}`, { isFavorite: !current });
-      dispatch(setApplications(list.map((a) => a.id === id ? data : a)));
+      const { data } = await api.patch(`/applications/${id}`, {
+        isFavorite: !current,
+      });
+      dispatch(setApplications(list.map((a) => (a.id === id ? data : a))));
     } catch {
       dispatch(setError("Failed to update favourite"));
     }
@@ -132,7 +138,13 @@ export default function ApplicationsPage() {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2.5 text-xs font-semibold uppercase tracking-widest transition-colors cursor-pointer border-b-2 -mb-px ${activeTab === tab ? "text-accent border-accent" : "text-text-muted border-transparent hover:text-text-primary"}`}
+            className={`px-4 py-2.5 text-xs font-semibold uppercase tracking-widest transition-colors cursor-pointer border-b-2 -mb-px ${
+              activeTab === tab && tab === "ALL"
+                ? "text-white bg-accent border-accent rounded"
+                : activeTab === tab
+                  ? "text-accent border-accent"
+                  : "text-text-muted border-transparent hover:text-text-primary"
+            }`}
           >
             {tab === "ALL" ? "All" : statusConfig[tab].label}
           </button>
