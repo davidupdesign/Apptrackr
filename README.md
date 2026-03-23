@@ -46,6 +46,22 @@ A full-stack job application tracker built with Next.js 16, NestJS, TypeScript, 
 
 ---
 
+## Screenshots
+
+### Dashboard
+
+![Dashboard](https://apptrackr-amber.vercel.app/readme/dashboard-2.webp)
+
+### Applications
+
+![Applications](https://apptrackr-amber.vercel.app/readme/applications.webp)
+
+### Application Detail
+
+![Application](https://apptrackr-amber.vercel.app/readme/app.webp)
+
+---
+
 ## Tech Stack
 
 | Category     | Technology                    |
