@@ -6,7 +6,7 @@ A full-stack job application tracker built with Next.js 16, NestJS, TypeScript, 
 
 ## Live Demo
 
-![Dashboard](apps/web/public/readme/dashboard.webp)
+![Dashboard](https://apptrackr-amber.vercel.app/readme/dashboard.webp)
 
 [**VIEW LIVE**](https://apptrackr-amber.vercel.app/)
 
@@ -79,7 +79,7 @@ A full-stack job application tracker built with Next.js 16, NestJS, TypeScript, 
 | Components   | shadcn/ui                     |
 | Animations   | Framer Motion                 |
 | Toasts       | Sonner                        |
-| Deployment   | Vercel (frontend) + Render (backend) |
+| Deployment   | Vercel (frontend) + Railway (backend) |
 
 ---
 
@@ -232,12 +232,11 @@ npm run lint       # Lint all apps
 
 ## Deployment
 
-**Backend → Render**
+**Backend → Railway**
 
-- Runtime: Node
-- Root Directory: `apps/api`
-- Build Command: `npm install && npm run build && npx prisma migrate deploy`
-- Start Command: `npm run start:prod`
+- Root Directory: `/` (monorepo root)
+- Build Command: `npm install && npx turbo run build --filter=api && cd apps/api && npx prisma migrate deploy`
+- Start Command: `node apps/api/dist/main`
 - Environment variables: `DATABASE_URL`, `JWT_SECRET`, `CORS_ORIGIN`, `PORT`
 
 **Frontend → Vercel**
