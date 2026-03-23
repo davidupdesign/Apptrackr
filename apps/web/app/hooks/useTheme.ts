@@ -33,12 +33,12 @@ function applyTheme(theme: Theme) {
 
 // usetheme
 export function useTheme() {
-  const [theme, setThemeState] = useState<Theme>("system");
+  const [theme, setThemeState] = useState<Theme>("light");
 
   // on mount — read saved preference and apply it
   useEffect(() => {
     const saved = localStorage.getItem("theme") as Theme | null;
-    const initial = saved ?? "system"; // default system if nothing saved
+    const initial = saved ?? "light"; // default system if nothing saved
     setThemeState(initial);
     applyTheme(initial);
   }, []);
